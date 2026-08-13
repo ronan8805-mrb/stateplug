@@ -233,6 +233,37 @@
   }
 }
 
+@keyframes verify-charge {
+  from {
+    width: 18%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes verify-seal {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes verify-flash {
+  0% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .marquee-track {
   animation: marquee 28s linear infinite;
 }
@@ -243,6 +274,19 @@
 
 .flicker {
   animation: bolt-flicker 5.5s steps(2, end) infinite;
+}
+
+.verify-charge {
+  width: 100%;
+  animation: verify-charge 1.2s var(--ease-out) forwards;
+}
+
+.verify-seal {
+  animation: verify-seal 700ms var(--ease-out) both;
+}
+
+.verify-flash {
+  animation: verify-flash 520ms var(--ease-out) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -258,7 +302,10 @@
   }
   .marquee-track,
   .aura,
-  .flicker {
+  .flicker,
+  .verify-charge,
+  .verify-seal,
+  .verify-flash {
     animation: none;
   }
 }

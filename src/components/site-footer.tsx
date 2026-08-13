@@ -65,8 +65,8 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
-                <Link to="/login" className="hover:text-neon">
-                  Account
+                <Link to="/verify" className="hover:text-neon">
+                  Verify a pack
                 </Link>
               </li>
             </ul>

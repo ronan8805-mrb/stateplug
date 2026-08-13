@@ -11,11 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthenticRouteImport } from './routes/authentic'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FindRouteImport } from './routes/find'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -27,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticRoute = AuthenticRouteImport.update({
+  id: '/authentic',
+  path: '/authentic',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -54,6 +61,11 @@ const ShopRoute = ShopRouteImport.update({
   path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductSlugRoute = ProductSlugRouteImport.update({
   id: '/product/$slug',
   path: '/product/$slug',
@@ -68,22 +80,26 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/authentic': typeof AuthenticRoute
   '/contact': typeof ContactRoute
   '/find': typeof FindRoute
   '/login': typeof LoginRoute
   '/lookbook': typeof LookbookRoute
   '/shop': typeof ShopRoute
+  '/verify': typeof VerifyRoute
   '/product/$slug': typeof ProductSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/authentic': typeof AuthenticRoute
   '/contact': typeof ContactRoute
   '/find': typeof FindRoute
   '/login': typeof LoginRoute
   '/lookbook': typeof LookbookRoute
   '/shop': typeof ShopRoute
+  '/verify': typeof VerifyRoute
   '/product/$slug': typeof ProductSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -91,11 +107,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/authentic': typeof AuthenticRoute
   '/contact': typeof ContactRoute
   '/find': typeof FindRoute
   '/login': typeof LoginRoute
   '/lookbook': typeof LookbookRoute
   '/shop': typeof ShopRoute
+  '/verify': typeof VerifyRoute
   '/product/$slug': typeof ProductSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -104,33 +122,39 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/authentic'
     | '/contact'
     | '/find'
     | '/login'
     | '/lookbook'
     | '/shop'
+    | '/verify'
     | '/product/$slug'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/authentic'
     | '/contact'
     | '/find'
     | '/login'
     | '/lookbook'
     | '/shop'
+    | '/verify'
     | '/product/$slug'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/authentic'
     | '/contact'
     | '/find'
     | '/login'
     | '/lookbook'
     | '/shop'
+    | '/verify'
     | '/product/$slug'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -138,11 +162,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuthenticRoute: typeof AuthenticRoute
   ContactRoute: typeof ContactRoute
   FindRoute: typeof FindRoute
   LoginRoute: typeof LoginRoute
   LookbookRoute: typeof LookbookRoute
   ShopRoute: typeof ShopRoute
+  VerifyRoute: typeof VerifyRoute
   ProductSlugRoute: typeof ProductSlugRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -161,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authentic': {
+      id: '/authentic'
+      path: '/authentic'
+      fullPath: '/authentic'
+      preLoaderRoute: typeof AuthenticRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -198,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$slug': {
       id: '/product/$slug'
       path: '/product/$slug'
@@ -218,11 +258,13 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuthenticRoute: AuthenticRoute,
   ContactRoute: ContactRoute,
   FindRoute: FindRoute,
   LoginRoute: LoginRoute,
   LookbookRoute: LookbookRoute,
   ShopRoute: ShopRoute,
+  VerifyRoute: VerifyRoute,
   ProductSlugRoute: ProductSlugRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

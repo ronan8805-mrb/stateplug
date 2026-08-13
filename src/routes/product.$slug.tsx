@@ -63,6 +63,12 @@ function ProductPage() {
             </div>
             <p className="mt-2 text-xs text-dim">{product.weight} · Licensed retailers</p>
           </div>
+          <p className="mt-6 text-sm text-fog">
+            Scan the QR on the bag.{" "}
+            <Link to="/verify" search={{ p: product.slug }} className="text-neon">
+              Confirm this product is authentic.
+            </Link>
+          </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
