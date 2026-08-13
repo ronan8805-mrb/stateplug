@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #050806;
+  --color-void: #020403;
+  --color-storm: #0a100b;
+  --color-surface: #0d140e;
+  --color-raised: #121b13;
+  --color-fg: #eef6ee;
+  --color-fog: #93a393;
+  --color-dim: #5c6b5c;
+  --color-neon: #39ff14;
+  --color-volt: #00ff41;
+  --color-cyan: #9ef6ff;
+  --color-line: color-mix(in oklab, var(--color-neon) 16%, transparent);
+  --color-line-strong: color-mix(in oklab, var(--color-neon) 38%, transparent);
+  --color-warn: #e8c36a;
+
+  --font-display: "Oswald", "Arial Narrow", "Impact", sans-serif;
+  --font-sans: "DM Sans", "Segoe UI", system-ui, sans-serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+
+  --shadow-border: 0 0 0 1px color-mix(in oklab, var(--color-fg) 8%, transparent);
+  --shadow-neon:
+    0 0 0 1px color-mix(in oklab, var(--color-neon) 45%, transparent),
+    0 0 28px color-mix(in oklab, var(--color-neon) 22%, transparent);
+  --shadow-neon-hot:
+    0 0 0 1px color-mix(in oklab, var(--color-neon) 80%, transparent),
+    0 0 40px color-mix(in oklab, var(--color-neon) 38%, transparent);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-bg);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    scroll-margin-top: 6rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: 0.02em;
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-neon) 40%, black);
+    color: var(--color-fg);
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-neon);
+    outline-offset: 3px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.plug-cursor,
+  html.plug-cursor * {
+    cursor: none !important;
+  }
+  html.plug-cursor input,
+  html.plug-cursor textarea,
+  html.plug-cursor select,
+  html.plug-cursor input *,
+  html.plug-cursor textarea * {
+    cursor: text !important;
+  }
+}
+
+@layer utilities {
+  .glow-text {
+    text-shadow:
+      0 0 14px color-mix(in oklab, var(--color-neon) 70%, transparent),
+      0 0 42px color-mix(in oklab, var(--color-neon) 28%, transparent);
+  }
+
+  .glow-box {
+    box-shadow: var(--shadow-neon);
+  }
+
+  .grain::before {
+    content: "";
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .power-up {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+    transition:
+      opacity 700ms var(--ease-out),
+      transform 700ms var(--ease-out),
+      filter 700ms var(--ease-out);
+  }
+  .power-up.in {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .volt-fill {
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 900ms var(--ease-out);
+  }
+  .volt-fill.in {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pulse-neon {
+  0%,
+  100% {
+    opacity: 0.55;
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(16px);
+  }
+}
+
+@keyframes bolt-flicker {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  12% {
+    opacity: 0.2;
+  }
+  18% {
+    opacity: 0.8;
+  }
+  22%,
+  100% {
+    opacity: 0.12;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes charge {
+  0% {
+    transform: scaleX(0);
+    opacity: 0.2;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+.aura {
+  animation: pulse-neon 2.8s ease-in-out infinite;
+}
+
+.flicker {
+  animation: bolt-flicker 5.5s steps(2, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .power-up,
+  .volt-fill {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .marquee-track,
+  .aura,
+  .flicker {
+    animation: none;
+  }
+}
