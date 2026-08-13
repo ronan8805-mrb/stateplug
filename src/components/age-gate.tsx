@@ -3,10 +3,11 @@ import { readAgeVerified, writeAgeVerified } from "@/lib/age";
 import { playStrike } from "@/lib/audio";
 import { StormCanvas } from "@/components/storm-canvas";
 
-type Phase = "boot" | "plug" | "confirm" | "denied" | "live";
+type Phase = "plug" | "confirm" | "denied" | "live";
 
 export function AgeGate({ children }: { children: ReactNode }) {
-  const [phase, setPhase] = useState<Phase>("boot");
+  const [phase, setPhase] = useState<Phase>("plug");
+  const [ready, setReady] = useState(false);
   const [flash, setFlash] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const dragging = useRef(false);
@@ -15,7 +16,8 @@ export function AgeGate({ children }: { children: ReactNode }) {
   const socketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setPhase(readAgeVerified() ? "live" : "plug");
+    if (readAgeVerified()) setPhase("live");
+    setReady(true);
   }, []);
 
   const connect = () => {
@@ -50,8 +52,7 @@ export function AgeGate({ children }: { children: ReactNode }) {
       const cy = plug.top + plug.height / 2;
       const sx = sock.left + sock.width / 2;
       const sy = sock.top + sock.height / 2;
-      const dist = Math.hypot(cx - sx, cy - sy);
-      if (dist < 110) {
+      if (Math.hypot(cx - sx, cy - sy) < 110) {
         connect();
         return;
       }
@@ -69,14 +70,15 @@ export function AgeGate({ children }: { children: ReactNode }) {
     }, 380);
   };
 
-  if (phase === "boot") {
-    return <div className="min-h-dvh bg-void" aria-busy="true" />;
-  }
-
-  if (phase === "live") return <>{children}</>;
+  if (phase === "live" && ready) return <>{children}</>;
 
   return (
-    <div className="relative isolate min-h-dvh overflow-hidden bg-void text-fg">
+    <div
+      className="fixed inset-0 z-[100] isolate overflow-y-auto overflow-x-hidden bg-void text-fg"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="age-gate-title"
+    >
       <img
         src="/hero-storm.jpg"
         alt=""
@@ -121,7 +123,10 @@ export function AgeGate({ children }: { children: ReactNode }) {
               />
             </button>
 
-            <h1 className="mt-8 text-center font-display text-4xl tracking-[0.14em] glow-text sm:text-6xl">
+            <h1
+              id="age-gate-title"
+              className="mt-8 text-center font-display text-4xl tracking-[0.14em] glow-text sm:text-6xl"
+            >
               Plug in to enter
             </h1>
             <p className="mt-3 max-w-sm text-center text-sm text-fog">
@@ -129,10 +134,7 @@ export function AgeGate({ children }: { children: ReactNode }) {
               reserved for adults 21 and over.
             </p>
 
-            <div
-              ref={socketRef}
-              className="mt-10 flex flex-col items-center gap-3"
-            >
+            <div ref={socketRef} className="mt-10 flex flex-col items-center gap-3">
               <div className="glow-box relative grid h-20 w-28 place-items-center rounded-[22px] bg-raised">
                 <div className="flex gap-4">
                   <span className="h-9 w-3.5 rounded-full bg-void shadow-[inset_0_0_8px_#39ff14]" />
@@ -160,7 +162,9 @@ export function AgeGate({ children }: { children: ReactNode }) {
             <p className="font-display text-[11px] tracking-[0.36em] text-neon">
               Confirm your frequency
             </p>
-            <h2 className="mt-3 text-3xl tracking-[0.08em]">Are you 21 or older?</h2>
+            <h2 id="age-gate-title" className="mt-3 text-3xl tracking-[0.08em]">
+              Are you 21 or older?
+            </h2>
             <p className="mt-3 text-sm text-fog">
               Cannabis products are for adults 21+. By entering you confirm you
               meet the legal age in your jurisdiction.
@@ -186,7 +190,9 @@ export function AgeGate({ children }: { children: ReactNode }) {
 
         {phase === "denied" ? (
           <div className="max-w-md text-center">
-            <h2 className="text-4xl tracking-[0.1em]">Come back charged</h2>
+            <h2 id="age-gate-title" className="text-4xl tracking-[0.1em]">
+              Come back charged
+            </h2>
             <p className="mt-4 text-fog">
               STATE PLUG is an adults-only experience. See you at 21.
             </p>

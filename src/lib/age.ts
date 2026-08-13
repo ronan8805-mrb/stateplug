@@ -1,35 +1,43 @@
-const COOKIE = "sp_age";
-const DAYS = 30;
+const SESSION_KEY = "sp_age_ok";
+const LEGACY_COOKIE = "sp_age";
 
-export function readAgeVerified(): boolean {
-  if (typeof document === "undefined") return false;
+function clearLegacy() {
+  if (typeof document === "undefined") return;
+  document.cookie = `${LEGACY_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax`;
   try {
-    if (document.cookie.split("; ").some((c) => c.startsWith(`${COOKIE}=1`))) {
-      return true;
-    }
-    return window.localStorage.getItem(COOKIE) === "1";
+    window.localStorage.removeItem(LEGACY_COOKIE);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** True only for this browser tab session — a new visit always gates. */
+export function readAgeVerified(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    clearLegacy();
+    return window.sessionStorage.getItem(SESSION_KEY) === "1";
   } catch {
     return false;
   }
 }
 
 export function writeAgeVerified() {
-  if (typeof document === "undefined") return;
-  const maxAge = DAYS * 24 * 60 * 60;
-  document.cookie = `${COOKIE}=1; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
+  if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(COOKIE, "1");
+    window.sessionStorage.setItem(SESSION_KEY, "1");
   } catch {
     /* ignore */
   }
+  clearLegacy();
 }
 
 export function clearAgeVerified() {
-  if (typeof document === "undefined") return;
-  document.cookie = `${COOKIE}=; Max-Age=0; Path=/; SameSite=Lax`;
+  if (typeof window === "undefined") return;
   try {
-    window.localStorage.removeItem(COOKIE);
+    window.sessionStorage.removeItem(SESSION_KEY);
   } catch {
     /* ignore */
   }
+  clearLegacy();
 }
